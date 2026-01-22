@@ -79,7 +79,7 @@ func (c *Config) generateTypes(app *pocketbase.PocketBase) error {
 	c.printBaseType(f)
 
 	if c.PrintSelectOptions {
-		optionsPath := filepath.Join(strings.Trim(root, "\t\n\r "), c.FilePath, "select-options.d.ts")
+		optionsPath := filepath.Join(strings.Trim(root, "\t\n\r "), c.FilePath, "select-options.ts")
 
 		fOptions, err := os.Create(optionsPath)
 		if err != nil {
