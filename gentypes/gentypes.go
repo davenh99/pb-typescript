@@ -45,6 +45,7 @@ func Register(app *pocketbase.PocketBase, cfg Config) {
 }
 
 func (c *Config) generateTypes(app *pocketbase.PocketBase) error {
+	autogenerateMsg := "/* This file was automatically generated, changes will be overwritten. */\n\n"
 	collections, err := app.FindAllCollections()
 	if err != nil {
 		return err
@@ -61,7 +62,7 @@ func (c *Config) generateTypes(app *pocketbase.PocketBase) error {
 		return err
 	}
 	defer fConst.Close()
-	fmt.Fprintf(fConst, "/* This file was automatically generated, changes will be overwritten. */\n\n")
+	fmt.Fprintf(fConst, autogenerateMsg)
 	fmt.Fprintf(fConst, "import PocketBase, { RecordService } from \"pocketbase\";\n\n")
 	c.printCollectionConstants(fConst, collections)
 	c.printCollectionRecordMap(fConst, collections)
@@ -74,7 +75,7 @@ func (c *Config) generateTypes(app *pocketbase.PocketBase) error {
 	}
 	defer f.Close()
 
-	f.WriteString("/* This file was automatically generated, changes will be overwritten. */\n\n")
+	f.WriteString(autogenerateMsg)
 
 	c.printBaseType(f)
 
@@ -87,7 +88,7 @@ func (c *Config) generateTypes(app *pocketbase.PocketBase) error {
 		}
 		defer fOptions.Close()
 
-		fOptions.WriteString("/* This file was automatically generated, changes will be overwritten. */\n\n")
+		fOptions.WriteString(autogenerateMsg)
 
 		for _, collection := range collections {
 			if !collection.System {
