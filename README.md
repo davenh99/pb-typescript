@@ -106,7 +106,6 @@ pb-typescript optionally exports select options as constants.
 
 Some features missing in pb-typescript, but finished in pocketbase-typegen:
 - full validation metadata
-- richer JSON field schemas
 - all field types not finished (missing geo point at least, haven't had a use for it yet)
 
 These features will be added in future when needed.
