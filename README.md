@@ -87,11 +87,6 @@ const session = await pb.collection<SessionsRecordExpand>(Collections.Sessions).
 
 For more examples of how the types look when they are generated check [progressa](https://github.com/davenh99/progressa/blob/main/ui/base.d.ts)
 
-Why this, and not:
-- [pocketbase-types-generator](https://github.com/wiezmankimchi/pocketbase-types-generator) (incomplete, unmaintained)
-- [typed-pocketbase](https://github.com/david-plugge/typed-pocketbase) (incomplete, unmaintained)
-- [pocketbase-schema](https://github.com/odama626/pocketbase-schema) (incomplete, unmaintained)
-
 Comparison with [pocketbase-typegen](https://github.com/patmood/pocketbase-typegen)
 
 | Aspect                          | **pb-typescript (this project)**                                 | **pocketbase-typegen**                  |
@@ -99,7 +94,6 @@ Comparison with [pocketbase-typegen](https://github.com/patmood/pocketbase-typeg
 | Integration model               | Native Go plugin, runs inside PocketBase                         | External generator                      |
 | Requires PocketBase credentials | ❌ No                                                           | ✅ Yes                                   |
 | Computed / virtual fields       | ✅ Available with [pb-computedfields](https://github.com/davenh99/pb-computedfields)| ❌ Not supported      |
-| Select options export           | ✅ Optional generated constants                                   | ❌ Not provided                         |
 | Completeness                    | ⚠️ Incomplete                                               | ✅ Comprehensive                    |
 | Intended audience               | Developers writing custom pocketbase instances, extending with go           | Any pocketbase developer |
 
