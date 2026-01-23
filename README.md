@@ -35,9 +35,9 @@ Your types will then be generated in the specified directory, whenever the schem
 ./pocketbase gen-types
 ```
 
-For more examples of how the types look when they are generated check [progressa]https://github.com/davenh99/progressa/blob/main/ui/base.d.ts
+For more examples of how the types look when they are generated check [progressa](https://github.com/davenh99/progressa/blob/main/ui/base.d.ts)
 
-Here is a sample output (the preview is a computed field, attached using [pb-computedfields]https://github.com/davenh99/pb-computedfields):
+Here is a sample output (the preview is a computed field, attached using [pb-computedfields](https://github.com/davenh99/pb-computedfields):
 
 ```
 interface BaseRecord {
@@ -61,17 +61,17 @@ type RoutinesUpdatePayload = Partial<RoutinesRecord>;
 ```
 
 Why this, and not:
-- [pocketbase-types-generator]https://github.com/wiezmankimchi/pocketbase-types-generator (incomplete, unmaintained)
-- [typed-pocketbase]https://github.com/david-plugge/typed-pocketbase (incomplete, unmaintained)
-- [pocketbase-schema]https://github.com/odama626/pocketbase-schema (incomplete, unmaintained)
+- [pocketbase-types-generator](https://github.com/wiezmankimchi/pocketbase-types-generator) (incomplete, unmaintained)
+- [typed-pocketbase](https://github.com/david-plugge/typed-pocketbase) (incomplete, unmaintained)
+- [pocketbase-schema](https://github.com/odama626/pocketbase-schema) (incomplete, unmaintained)
 
-Comparison with [pocketbase-typegen]https://github.com/patmood/pocketbase-typegen
+Comparison with [pocketbase-typegen](https://github.com/patmood/pocketbase-typegen)
 
 | Aspect                          | **pb-typescript (this project)**                                 | **pocketbase-typegen**                  |
 | ------------------------------- | ---------------------------------------------------------------- | --------------------------------------- |
 | Integration model               | Native Go plugin, runs inside PocketBase                         | External generator                      |
 | Requires PocketBase credentials | ❌ No                                                           | ✅ Yes                                   |
-| Computed / virtual fields       | ✅ Available with [pb-computedfields]https://github.com/davenh99/pb-computedfields)| ❌ Not supported      |
+| Computed / virtual fields       | ✅ Available with [pb-computedfields](https://github.com/davenh99/pb-computedfields)| ❌ Not supported      |
 | Select options export           | ✅ Optional generated constants                                   | ❌ Not provided                         |
 | Completeness                    | ⚠️ Incomplete                                               | ✅ Comprehensive                    |
 | Intended audience               | Developers writing custom pocketbase instances, extending with go           | Any pocketbase developer |
