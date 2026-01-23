@@ -35,6 +35,33 @@ Your types will then be generated in the specified directory, whenever the schem
 ./pocketbase gen-types
 ```
 
+You also have access to a typed pocketbase instance in pocketbase-types:
+
+```ts
+import { Collections, TypedPocketBase } from "../pocketbase-types";
+
+const pb = new PocketBase(http://127.0.0.1:8090) as TypedPocketBase;
+
+// exercise response here is typed as ExercisesRecord
+const exercise = await pb.collection(Collections.Exercises).getFirstListItem(pb.filter("name = {:name}", { name }));
+```
+
+Because of the complexity required to properly type expands, if you are using expands, it would be recommended to write a new types file manually, and extend types there (possibly extended.d.ts or whatever you want to call it).
+```ts
+interface SessionsRecordExpand extends SessionsRecord {
+  expand: {
+    tags: TagsRecord[];
+    sessionExercises_via_session: SessionExercisesRecordExpand[];
+    sessionMeals_via_session: SessionMealsRecordExpand[];
+  };
+}
+
+// you then have to type your requests manually as well.
+import { Collections } from "../pocketbase-types";
+
+const session = await pb.collection<SessionsRecordExpand>(Collections.Sessions).GetOne(id, {expand: "tags, sessionExercises_via_session, sessionMeals_via_session"})
+```
+
 For more examples of how the types look when they are generated check [progressa](https://github.com/davenh99/progressa/blob/main/ui/base.d.ts)
 
 Here is a sample output (the preview is a computed field, attached using [pb-computedfields](https://github.com/davenh99/pb-computedfields):
