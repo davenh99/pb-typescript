@@ -55,7 +55,7 @@ func (c *Config) generateTypes(app *pocketbase.PocketBase) error {
 		panic(err)
 	}
 
-	constsPath := filepath.Join(strings.Trim(root, "\t\n\r "), c.FilePath, "pocketbase.ts")
+	constsPath := filepath.Join(strings.Trim(root, "\t\n\r "), c.FilePath, "pocketbase-types.ts")
 	fConst, err := os.Create(constsPath)
 	if err != nil {
 		return err
