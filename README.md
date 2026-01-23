@@ -10,7 +10,7 @@ go get github.com/davenh99/pb-typescript
 
 Then, in your main.go, put in something like (you can use an env var to avoid attaching the plugin in production):
 
-```
+```go
 if env == "development" {
     gentypes.Register(app, gentypes.Config{
         FilePath:                   "ui",
@@ -39,7 +39,7 @@ For more examples of how the types look when they are generated check [progressa
 
 Here is a sample output (the preview is a computed field, attached using [pb-computedfields](https://github.com/davenh99/pb-computedfields):
 
-```
+```ts
 interface BaseRecord {
   readonly id: string;
   readonly collectionName: string;
