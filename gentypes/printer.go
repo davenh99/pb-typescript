@@ -19,38 +19,62 @@ func (c *Config) printBaseType(f *os.File) {
 	fmt.Fprint(f, "}\n\n")
 }
 
-func (c *Config) printCollectionSelectOptions(f *os.File, collection *core.Collection) {
-	collectionName := capitalise(collection.Name)
+func (c *Config) printCollectionSchema(f *os.File, collections []*core.Collection) {
+	fmt.Fprintf(f, `import { CollectionRecords } from "./pocketbase-types";
 
-	selectFields := make([]*core.SelectField, 0)
+type FieldType =
+  | "text"
+  | "number"
+  | "bool"
+  | "relation"
+  | "select"
+  | "json"
+  | "file"
+  | "date"
+  | "autodate"
+  | "email";
 
-	for _, field := range collection.Fields {
-		if field.Type() == "select" && !field.GetHidden() {
+type FieldDefinition = {
+  type: FieldType;
+  values?: string[];
+};
+
+export type FieldSchema = {
+  [C in keyof CollectionRecords]: {
+    [F in keyof CollectionRecords[C]]?: FieldDefinition;
+  };
+};
+
+export const fieldSchema: FieldSchema = {
+`)
+
+	for _, collection := range collections {
+		if collection.System {
+			continue
+		}
+
+		fmt.Fprintf(f, "  %s: {\n", collection.Name)
+
+		for _, field := range collection.Fields {
+			if field.GetHidden() {
+				continue
+			}
+			fmt.Fprintf(f, "    %s: { type: \"%s\"", field.GetName(), field.Type())
+
 			if sf, ok := field.(*core.SelectField); ok {
-				selectFields = append(selectFields, sf)
+				fmt.Fprint(f, ", values: [")
+				for i, v := range sf.Values {
+					fmt.Fprintf(f, "%q", v)
+					if i < len(sf.Values)-1 {
+						fmt.Fprint(f, ", ")
+					}
+				}
+
+				fmt.Fprint(f, "]")
 			}
+			fmt.Fprint(f, " },\n")
 		}
-	}
-
-	if len(selectFields) == 0 {
-		return
-	}
-
-	fmt.Fprintf(f, "export const %sSelectOptions = {\n", collectionName)
-
-	for _, sf := range selectFields {
-		fieldName := sf.GetName()
-
-		values := append([]string{}, sf.Values...)
-
-		fmt.Fprintf(f, "  %s: [", fieldName)
-		for i, v := range values {
-			fmt.Fprintf(f, "%q", v)
-			if i < len(values)-1 {
-				fmt.Fprint(f, ", ")
-			}
-		}
-		fmt.Fprintln(f, "],")
+		fmt.Fprint(f, "  },\n")
 	}
 
 	fmt.Fprint(f, "};\n\n")

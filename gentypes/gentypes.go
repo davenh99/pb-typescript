@@ -20,7 +20,6 @@ type AdditionalField interface {
 type Config struct {
 	FilePath                   string
 	CollectionAdditionalFields map[string][]AdditionalField
-	PrintSelectOptions         bool
 }
 
 func Register(app *pocketbase.PocketBase, cfg Config) {
@@ -68,7 +67,7 @@ func (c *Config) generateTypes(app *pocketbase.PocketBase) error {
 	c.printCollectionRecordMap(fConst, collections)
 	printTypedPocketBase(fConst)
 
-	outPath := filepath.Join(strings.Trim(root, "\t\n\r "), c.FilePath, "base.d.ts")
+	outPath := filepath.Join(strings.Trim(root, "\t\n\r "), c.FilePath, "pocketbase.d.ts")
 	f, err := os.Create(outPath)
 	if err != nil {
 		return err
@@ -79,26 +78,17 @@ func (c *Config) generateTypes(app *pocketbase.PocketBase) error {
 
 	c.printBaseType(f)
 
-	if c.PrintSelectOptions {
-		optionsPath := filepath.Join(strings.Trim(root, "\t\n\r "), c.FilePath, "select-options.ts")
+	optionsPath := filepath.Join(strings.Trim(root, "\t\n\r "), c.FilePath, "pocketbase-const.ts")
 
-		fOptions, err := os.Create(optionsPath)
-		if err != nil {
-			return err
-		}
-		defer fOptions.Close()
-
-		fOptions.WriteString(autogenerateMsg)
-
-		for _, collection := range collections {
-			if !collection.System {
-				if c.PrintSelectOptions {
-					c.printCollectionSelectOptions(fOptions, collection)
-				}
-			}
-		}
-
+	fSchema, err := os.Create(optionsPath)
+	if err != nil {
+		return err
 	}
+	defer fSchema.Close()
+
+	fSchema.WriteString(autogenerateMsg)
+
+	c.printCollectionSchema(fSchema, collections)
 
 	for _, collection := range collections {
 		if !collection.System {
