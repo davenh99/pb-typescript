@@ -15,6 +15,7 @@ func (c *Config) printBaseType(f *os.File) {
 	for _, field := range baseFields {
 		fmt.Fprintf(f, "  readonly %s: string;\n", field)
 	}
+	fmt.Fprintf(f, "  expand?: { [key: string]: any };")
 
 	fmt.Fprint(f, "}\n\n")
 }
