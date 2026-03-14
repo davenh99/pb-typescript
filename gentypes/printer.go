@@ -15,8 +15,7 @@ func (c *Config) printBaseType(f *os.File) {
 	for _, field := range baseFields {
 		fmt.Fprintf(f, "  readonly %s: string;\n", field)
 	}
-	fmt.Fprintf(f, "  expand?: { [key: string]: any };")
-
+	fmt.Fprint(f, "  expand?: { [key: string]: any };")
 	fmt.Fprint(f, "}\n\n")
 }
 
@@ -117,12 +116,9 @@ func (c *Config) printCollectionTypes(f *os.File, collection *core.Collection) {
 
 func printTypedPocketBase(f *os.File) {
 	fmt.Fprintln(f, "export interface TypedPocketBase extends PocketBase {")
-	fmt.Fprintln(f, "  collection<K extends keyof CollectionRecords>(")
-	fmt.Fprintln(f, "    name: K")
-	fmt.Fprintln(f, "  ): RecordService<CollectionRecords[K]>;")
-	fmt.Fprintln(f, "")
-	fmt.Fprintln(f, "  // fallback for dynamic strings")
-	fmt.Fprintln(f, "  collection(name: string): RecordService<any>;")
+	fmt.Fprintln(f, "  collection<K extends keyof CollectionRecords>(name: K): RecordService<CollectionRecords[K]>;")
+	fmt.Fprintln(f, "  // fallback for dynamic types")
+	fmt.Fprintln(f, "  collection<T>(name: string): RecordService<T>;")
 	fmt.Fprintln(f, "}")
 	fmt.Fprintln(f, "")
 }
