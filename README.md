@@ -89,7 +89,7 @@ const session = await pb.collection<SessionsRecordExpand>(Collections.Sessions).
 ```
 
 pb-typescript also generates constants for your convenience. the main use case for this would be for getting select options, but in future this could allow getting other field metadata.
-```
+```ts
 // pocketbase-const.ts
 
 // field definition is basic for now, main use case is select options.
