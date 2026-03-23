@@ -24,9 +24,9 @@ The package will look for the root of your git repo (git is required for this pa
 The following files will be generated:
 
 ```
-base.d.ts
+pocketbase.d.ts
 pocketbase-types.ts
-select-options.ts // optional
+pocketbase-const.ts
 ```
 
 Your types will then be generated in the specified directory, whenever the schema changes or you run the following command (assuming your app executable is named pocketbase):
@@ -38,6 +38,7 @@ Your types will then be generated in the specified directory, whenever the schem
 Here is a sample output (the preview is a computed field, attached using [pb-computedfields](https://github.com/davenh99/pb-computedfields):
 
 ```ts
+// pocketbase.d.ts
 interface BaseRecord {
   readonly id: string;
   readonly collectionName: string;
@@ -69,8 +70,9 @@ const pb = new PocketBase("http://127.0.0.1:8090") as TypedPocketBase;
 const exercise = await pb.collection(Collections.Exercises).getFirstListItem(pb.filter("name = {:name}", { name }));
 ```
 
-Because of the complexity required to properly type expands, if you are using expands, it would be recommended to write a new types file manually, and extend types there (possibly extended.d.ts or whatever you want to call it).
+Because typing expands properly is not possible, if you are using expands, it would be recommended to write a new types file manually, and extend types there.
 ```ts
+// types.d.ts
 interface SessionsRecordExpand extends SessionsRecord {
   expand: {
     tags: TagsRecord[];
@@ -79,10 +81,43 @@ interface SessionsRecordExpand extends SessionsRecord {
   };
 }
 
-// you then have to type your requests manually as well.
+// some file
 import { Collections } from "../pocketbase-types";
 
+// type the request as SessionsRecordExpand
 const session = await pb.collection<SessionsRecordExpand>(Collections.Sessions).GetOne(id, {expand: "tags, sessionExercises_via_session, sessionMeals_via_session"})
+```
+
+pb-typescript also generates constants for your convenience. the main use case for this would be for getting select options, but in future this could allow getting other field metadata.
+```
+// pocketbase-const.ts
+
+// field definition is basic for now, main use case is select options.
+type FieldDefinition = {
+  type: FieldType;
+  values?: string[];
+};
+
+export type FieldSchema = {
+  [C in keyof CollectionRecords]: {
+    [F in keyof CollectionRecords[C]]?: FieldDefinition;
+  };
+};
+
+export const fieldSchema: FieldSchema = {
+  ...,
+  uom: {
+    id: { type: "text" },
+    name: { type: "text" },
+    category: { type: "select", values: ["weight", "volume", "units"] }, // select options
+    ratio: { type: "number" },
+    referenceUom: { type: "bool" },
+    active: { type: "bool" },
+    created: { type: "autodate" },
+    updated: { type: "autodate" },
+  },
+  ...
+}
 ```
 
 For more examples of how the types look when they are generated check [progressa](https://github.com/davenh99/progressa/blob/main/ui/base.d.ts)
@@ -101,8 +136,8 @@ SO, why pb-typescript (this project) vs pocketbase-typegen?
 If you are not extending with go, you can't use this package.
 
 If you are extending with go, pb-typescript is simpler to setup (no requirement for setting up credentials, pb custom hooks).
+
 pb-typescript includes support for computed fields, and including them in your typed output.
-pb-typescript optionally exports select options as constants.
 
 Some features missing in pb-typescript, but finished in pocketbase-typegen:
 - full validation metadata
