@@ -1,3 +1,5 @@
+### Moved to [Codeberg](https://codeberg.org/davenh99/pb-typescript)
+
 ## TypeScript types generator for pocketbase
 
 ### Usage
